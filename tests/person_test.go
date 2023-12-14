@@ -6,7 +6,6 @@ import (
 	"github.com/pg-sharding/gorm-spqr/utils"
 	"reflect"
 	"testing"
-	"time"
 )
 
 func setup() {
@@ -23,10 +22,9 @@ func TestCreatePerson(t *testing.T) {
 	setup()
 
 	var person = models.Person{
-		ID:         1,
-		FirstName:  "John",
-		LastName:   "Smith",
-		JoinedDate: time.Date(2000, 1, 1, 0, 0, 0, 0, time.FixedZone("", 0)),
+		ID:        1,
+		FirstName: "John",
+		LastName:  "Smith",
 	}
 
 	controllers.WritePerson(&person)
@@ -43,10 +41,9 @@ func TestReadPerson(t *testing.T) {
 	setup()
 
 	var person = models.Person{
-		ID:         1,
-		FirstName:  "John",
-		LastName:   "Smith",
-		JoinedDate: time.Date(2000, 1, 1, 0, 0, 0, 0, time.FixedZone("", 0)),
+		ID:        1,
+		FirstName: "John",
+		LastName:  "Smith",
 	}
 
 	controllers.WritePerson(&person)
@@ -67,10 +64,9 @@ func TestUpdatePerson(t *testing.T) {
 	setup()
 
 	var person = models.Person{
-		ID:         1,
-		FirstName:  "John",
-		LastName:   "Smith",
-		JoinedDate: time.Date(2000, 1, 1, 0, 0, 0, 0, time.FixedZone("", 0)),
+		ID:        1,
+		FirstName: "John",
+		LastName:  "Smith",
 	}
 
 	controllers.WritePerson(&person)
@@ -97,10 +93,9 @@ func TestDeletePerson(t *testing.T) {
 	setup()
 
 	var person = models.Person{
-		ID:         1,
-		FirstName:  "John",
-		LastName:   "Smith",
-		JoinedDate: time.Date(2000, 1, 1, 0, 0, 0, 0, time.FixedZone("", 0)),
+		ID:        1,
+		FirstName: "John",
+		LastName:  "Smith",
 	}
 
 	controllers.WritePerson(&person)
