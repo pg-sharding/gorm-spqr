@@ -4,6 +4,7 @@ import (
 	"github.com/pg-sharding/gorm-spqr/controllers"
 	"github.com/pg-sharding/gorm-spqr/models"
 	"github.com/pg-sharding/gorm-spqr/utils"
+	"os"
 	"reflect"
 	"testing"
 )
@@ -16,6 +17,12 @@ func tearDown(t *testing.T) {
 	if err := utils.DeleteAll(); err != nil {
 		t.Errorf("Error running tearDown: %s", err)
 	}
+}
+
+func TestMain(m *testing.M) {
+	models.SetupSharding()
+	code := m.Run()
+	os.Exit(code)
 }
 
 func TestCreatePerson(t *testing.T) {
