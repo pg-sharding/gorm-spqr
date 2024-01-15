@@ -9,6 +9,7 @@ import (
 )
 
 func setup() {
+	models.SetupSharding()
 	models.ConnectDatabase()
 }
 
