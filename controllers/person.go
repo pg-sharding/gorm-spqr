@@ -17,8 +17,9 @@ func GetPerson(id uint32) (*models.Person, error) {
 	return &person, nil
 }
 
-func WritePerson(person *models.Person) {
-	models.DB.Create(person)
+func WritePerson(person *models.Person) error {
+	tx := models.DB.Create(person)
+	return tx.Error
 }
 
 func UpdatePerson(person *models.Person) error {
@@ -38,4 +39,17 @@ func DeletePerson(id uint32) error {
 
 	models.DB.Delete(&person)
 	return nil
+}
+
+func WritePeople(people []*models.Person) error {
+	tx := models.DB.Create(people)
+	return tx.Error
+}
+
+func GetPeople(from uint32, to uint32) ([]*models.Person, error) {
+	people := make([]*models.Person, 0)
+	if err := models.DB.Where("id >= ? AND id <= ?", from, to).Find(&people).Error; err != nil {
+		return nil, err
+	}
+	return people, nil
 }
