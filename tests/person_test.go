@@ -152,4 +152,6 @@ func TestMultipleWrite(t *testing.T) {
 	assert.Check(t, err, "could not get people: %s", err)
 
 	assert.Check(t, is.Equal(len(secondShardPeople), 100), "expected to have %d records on 1st shard, got %d", 100, len(secondShardPeople))
+
+	tearDown(t)
 }
