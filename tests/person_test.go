@@ -2,13 +2,14 @@ package tests
 
 import (
 	"fmt"
+	"os"
+	"testing"
+
 	"github.com/pg-sharding/gorm-spqr/controllers"
 	"github.com/pg-sharding/gorm-spqr/models"
 	"github.com/pg-sharding/gorm-spqr/utils"
-	"github.com/stretchr/testify/assert"
-	"os"
-	"reflect"
-	"testing"
+	"gotest.tools/v3/assert"
+	is "gotest.tools/v3/assert/cmp"
 )
 
 func setup() {
@@ -38,10 +39,10 @@ func TestCreatePerson(t *testing.T) {
 	}
 
 	err := controllers.WritePerson(&person)
-	assert.NoErrorf(t, err, "could not write: %s", err)
+	assert.Check(t, err, "could not write: %s", err)
 
 	var allPersons = controllers.GetAllPersons()
-	assert.Len(t, allPersons, 1, "Expected to have 1 person in db, got %d", len(allPersons))
+	assert.Check(t, is.Len(allPersons, 1), "Expected to have 1 person in db, got %d", len(allPersons))
 
 	tearDown(t)
 }
@@ -56,12 +57,12 @@ func TestReadPerson(t *testing.T) {
 	}
 
 	err := controllers.WritePerson(&person)
-	assert.NoErrorf(t, err, "could not write: %s", err)
+	assert.Check(t, err, "could not write: %s", err)
 
 	var personDb *models.Person
 	personDb, err = controllers.GetPerson(person.ID)
-	assert.NoErrorf(t, err, "error getting person: %s", err)
-	assert.True(t, reflect.DeepEqual(person, *personDb), "Expected %#v, got %#v", person, personDb)
+	assert.Check(t, err, "error getting person: %s", err)
+	assert.DeepEqual(t, person, *personDb)
 
 	tearDown(t)
 }
@@ -76,17 +77,17 @@ func TestUpdatePerson(t *testing.T) {
 	}
 
 	err := controllers.WritePerson(&person)
-	assert.NoErrorf(t, err, "could not write: %s", err)
+	assert.Check(t, err, "could not write: %s", err)
 
 	person.Email = "foo@bar"
 
 	err = controllers.UpdatePerson(&person)
-	assert.NoErrorf(t, err, "error updating: %s", err)
+	assert.Check(t, err, "error updating: %s", err)
 
 	var personDb *models.Person
 	personDb, err = controllers.GetPerson(person.ID)
-	assert.NoErrorf(t, err, "error getting person: %s", err)
-	assert.True(t, reflect.DeepEqual(person, *personDb), "Expected %#v, got %#v", person, personDb)
+	assert.Check(t, err, "error getting person: %s", err)
+	assert.DeepEqual(t, person, *personDb)
 
 	tearDown(t)
 }
@@ -101,16 +102,16 @@ func TestDeletePerson(t *testing.T) {
 	}
 
 	err := controllers.WritePerson(&person)
-	assert.NoErrorf(t, err, "could not write: %s", err)
+	assert.Check(t, err, "could not write: %s", err)
 
 	var allPersons = controllers.GetAllPersons()
-	assert.Len(t, allPersons, 1, "Expected to have 1 person in db, got %d", len(allPersons))
+	assert.Check(t, is.Len(allPersons, 1), "Expected to have 1 person in db, got %d", len(allPersons))
 
 	err = controllers.DeletePerson(person.ID)
-	assert.NoErrorf(t, err, "error deleting person: %s", err)
+	assert.Check(t, err, "error deleting person: %s", err)
 
 	allPersons = controllers.GetAllPersons()
-	assert.Emptyf(t, allPersons, "Expected to have no people in db, got %d", len(allPersons))
+	assert.Check(t, is.Len(allPersons, 0), "Expected to have no people in db, got %d", len(allPersons))
 
 	tearDown(t)
 }
@@ -128,7 +129,7 @@ func TestMultipleWrite(t *testing.T) {
 	}
 
 	err := controllers.WritePeople(firstShard)
-	assert.NoErrorf(t, err, "could not write: %s", err)
+	assert.Check(t, err, "could not write: %s", err)
 
 	var secondShard = make([]*models.Person, 0)
 	for i := 100; i < 200; i++ {
@@ -140,15 +141,15 @@ func TestMultipleWrite(t *testing.T) {
 	}
 
 	err = controllers.WritePeople(secondShard)
-	assert.NoErrorf(t, err, "could not write: %s", err)
+	assert.Check(t, err, "could not write: %s", err)
 
 	firstShardPeople, err := controllers.GetPeople(uint32(1), uint32(99))
-	assert.NoErrorf(t, err, "could not get people: %s", err)
+	assert.Check(t, err, "could not get people: %s", err)
 
-	assert.Equalf(t, len(firstShardPeople), 99, "expected to have %d records on 1st shard, got %d", 99, len(firstShardPeople))
+	assert.Check(t, is.Equal(len(firstShardPeople), 99), "expected to have %d records on 1st shard, got %d", 99, len(firstShardPeople))
 
 	secondShardPeople, err := controllers.GetPeople(uint32(100), uint32(199))
-	assert.NoErrorf(t, err, "could not get people: %s", err)
+	assert.Check(t, err, "could not get people: %s", err)
 
-	assert.Equalf(t, len(secondShardPeople), 100, "expected to have %d records on 1st shard, got %d", 100, len(secondShardPeople))
+	assert.Check(t, is.Equal(len(secondShardPeople), 100), "expected to have %d records on 1st shard, got %d", 100, len(secondShardPeople))
 }
