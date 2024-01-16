@@ -17,8 +17,9 @@ func GetPerson(id uint32) (*models.Person, error) {
 	return &person, nil
 }
 
-func WritePerson(person *models.Person) {
-	models.DB.Create(person)
+func WritePerson(person *models.Person) error {
+	tx := models.DB.Create(person)
+	return tx.Error
 }
 
 func UpdatePerson(person *models.Person) error {

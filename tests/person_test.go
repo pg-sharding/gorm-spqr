@@ -22,6 +22,7 @@ func tearDown(t *testing.T) {
 func TestMain(m *testing.M) {
 	models.SetupSharding()
 	code := m.Run()
+	_ = utils.DeleteAll()
 	os.Exit(code)
 }
 
@@ -34,7 +35,9 @@ func TestCreatePerson(t *testing.T) {
 		LastName:  "Smith",
 	}
 
-	controllers.WritePerson(&person)
+	if err := controllers.WritePerson(&person); err != nil {
+		t.Errorf("could not write: %s", err)
+	}
 
 	var allPersons = controllers.GetAllPersons()
 	if len(allPersons) != 1 {
@@ -53,7 +56,9 @@ func TestReadPerson(t *testing.T) {
 		LastName:  "Smith",
 	}
 
-	controllers.WritePerson(&person)
+	if err := controllers.WritePerson(&person); err != nil {
+		t.Errorf("could not write: %s", err)
+	}
 
 	var personDb *models.Person
 	var err error
@@ -76,7 +81,9 @@ func TestUpdatePerson(t *testing.T) {
 		LastName:  "Smith",
 	}
 
-	controllers.WritePerson(&person)
+	if err := controllers.WritePerson(&person); err != nil {
+		t.Errorf("could not write: %s", err)
+	}
 
 	person.Email = "foo@bar"
 
@@ -105,7 +112,9 @@ func TestDeletePerson(t *testing.T) {
 		LastName:  "Smith",
 	}
 
-	controllers.WritePerson(&person)
+	if err := controllers.WritePerson(&person); err != nil {
+		t.Errorf("could not write: %s", err)
+	}
 
 	var allPersons = controllers.GetAllPersons()
 	if len(allPersons) != 1 {
