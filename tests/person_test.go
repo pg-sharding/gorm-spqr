@@ -24,6 +24,7 @@ func tearDown(t *testing.T) {
 
 func TestMain(m *testing.M) {
 	models.SetupSharding()
+	models.CreateTables()
 	code := m.Run()
 	_ = utils.DeleteAll()
 	os.Exit(code)
