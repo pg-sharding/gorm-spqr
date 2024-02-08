@@ -1,6 +1,6 @@
 module github.com/pg-sharding/gorm-spqr
 
-go 1.21.4
+go 1.21
 
 require (
 	gorm.io/driver/postgres v1.5.4
