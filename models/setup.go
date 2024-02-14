@@ -36,15 +36,15 @@ func SetupSharding() {
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "could not setup sharding: %s", err)
 	}
-	_, err = conn.Exec(context.Background(), "Add KEY RANGE krid1 FROM 1 TO 100 ROUTE TO sh1 FOR DISTRIBUTION ds1;")
+	_, err = conn.Exec(context.Background(), "CREATE KEY RANGE krid1 FROM 1 TO 100 ROUTE TO sh1 FOR DISTRIBUTION ds1;")
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "could not setup sharding: %s", err)
 	}
-	_, err = conn.Exec(context.Background(), "Add KEY RANGE krid2 FROM 100 TO 200 ROUTE TO sh2 FOR DISTRIBUTION ds1;")
+	_, err = conn.Exec(context.Background(), "CREATE KEY RANGE krid2 FROM 100 TO 200 ROUTE TO sh2 FOR DISTRIBUTION ds1;")
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "could not setup sharding: %s", err)
 	}
-	_, err = conn.Exec(context.Background(), "ALTER DISTRIBUTION ds1 ATTACH RELATION people COLUMNS id;")
+	_, err = conn.Exec(context.Background(), "ALTER DISTRIBUTION ds1 ATTACH RELATION people DISTRIBUTION KEY id;")
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "could not setup sharding: %s", err)
 	}
